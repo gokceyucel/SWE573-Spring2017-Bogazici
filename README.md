@@ -2,6 +2,6 @@
 
 This is Bogazici University Software Engineering Program 573 Software Development Practice course's git repository
 
-- [Course Notes](https://github.com/gokceyucel/SWE573-Spring2017-Bogazici/wiki/Course-Notes)
+- [Project](https://github.com/gokceyucel/SWE573-Spring2017-Bogazici/projects/1)
 - [Resources](https://github.com/gokceyucel/SWE573-Spring2017-Bogazici/wiki/Resources)
-- [API Documentation](https://github.com/gokceyucel/SWE573-Spring2017-Bogazici/wiki/API-Documentation)
+- [Requirements](https://github.com/gokceyucel/SWE573-Spring2017-Bogazici/wiki/Requirements)
