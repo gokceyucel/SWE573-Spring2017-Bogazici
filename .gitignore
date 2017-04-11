@@ -1,0 +1,11 @@
+/dist
+/logs
+/npm-debug.log
+/node_modules
+/config
+.DS_Store
+.vscode
+Procfile
+config.json
+README.md
+LICENSE
