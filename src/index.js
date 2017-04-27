@@ -6,9 +6,18 @@ import bodyParser from 'body-parser';
 import initializeDb from './db';
 import middleware from './middleware';
 import api from './api';
+import publicApp from './public';
 import config from './config.json';
+import ejs from 'ejs';
+import path from 'path';
 
 let app = express();
+
+// view engine setup
+app.set('views', path.join(__dirname, 'public/views'));
+app.set('view engine', 'ejs');
+app.engine('html', ejs.renderFile);
+
 app.server = http.createServer(app);
 
 // logger
@@ -31,6 +40,9 @@ initializeDb( db => {
 
 	// api router
 	app.use('/api', api({ config, db }));
+
+	// app router
+	app.use('/app', publicApp({ config, db }));
 
 	const port = process.env.PORT || config.port;
 
