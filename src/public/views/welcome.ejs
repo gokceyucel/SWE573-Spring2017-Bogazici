@@ -1,16 +1,46 @@
 <!DOCTYPE html>
 
 <html>
-    <head>
-        <script src='https://code.jquery.com/jquery-2.1.4.min.js'></script>
-        <script>
-            $(function() {
-                $.get('/api/access-token' + location.search).done(function(user) {
-                    // Do something with your signed in user&#39;s information here.
-                    console.log('here is the user', user);
-                });
-            });
-        </script>
-    </head>
-    <body>welcome twitter user!</body>
+
+<head>
+    <script src='https://code.jquery.com/jquery-2.1.4.min.js'></script>
+    <script>
+        $(function () {
+            // Get user data
+            var userData = sessionStorage.getItem('user');
+            var user = userData ? JSON.parse(userData) : undefined;
+
+            // User session not found
+            if (!user) {
+                console.log('user session not found');
+
+                // Get tokens from twitter callback
+                var tokens = location.search;
+
+                if (tokens) {
+                    // Callback from twitter login
+
+                    // Validate signed-in user
+                    $.get('/api/access-token' + location.search)
+                        .done(function (user) {
+                            sessionStorage.setItem('user', JSON.stringify(user));
+                            $('h1').text('Welcome ' + user.name);
+                        });
+                } else {
+                    // User not found, redirect to Twitter sign-in
+                    window.location.href = '/app/auth';
+                }
+            } else {
+                // User found display username
+                console.log('user session found:',user);
+                $('h1').text('Welcome ' + user.name);
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <h1></h1>
+</body>
+
 </html>

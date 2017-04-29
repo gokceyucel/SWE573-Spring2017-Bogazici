@@ -53,24 +53,21 @@ export default ({ config, db }) => {
 				console.log('Your OAuth Access Token: ', oauth_access_token);
 				console.log('Your OAuth Token Secret: ', oauth_access_token_secret);
 				console.log('Now, save these two values, along with your original consumer secret and key and use these in your twitter app');
+
+				oa.get('https://api.twitter.com/1.1/account/verify_credentials.json', oauth_access_token, oauth_access_token_secret, (err, data, response) => {
+					if (err) throw new Error(err.data);
+					console.log('user data:');
+					var user = JSON.parse(data);
+					console.log(user);
+
+					// TODO: DO NOT SEND SENSITIVE INFO TO CLIENT SIDE, REMOVE THESE!!!;
+					user.access_token = oauth_access_token;
+					user.access_token_secret = oauth_access_token_secret;
+
+					res.json(user);
+				});
+
 			});
-
-
-		// twitter.getAccessToken(requestToken, _requestSecret, verifier, function (err, accessToken, accessSecret) {
-		// 	if (err)
-		// 		res.status(500).send(err);
-		// 	else
-		// 		twitter.verifyCredentials(accessToken, accessSecret, function (err, user) {
-		// 			if (err)
-		// 				res.status(500).send(err);
-		// 			else
-		// 				res.send(user);
-		// 		});
-		// });
-	});
-
-	api.get('/welcome', (req, res) => {
-		res.json({ message: 'welcome from twitter' });
 	});
 
 	return api;

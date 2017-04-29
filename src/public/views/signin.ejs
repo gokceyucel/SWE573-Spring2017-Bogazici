@@ -7,6 +7,14 @@
     <script src='https://code.jquery.com/jquery-2.1.4.min.js'></script>
     <script>
         $(function () {
+            // Get user data
+            var user = sessionStorage.getItem('user');
+            if (!user) {
+                // User not found. This is the page that the user will sign-in with twitter.
+            } else {
+                window.location.href = '/app/auth/welcome';
+            }
+
             $('#sign-in-with-twitter').on('click', function () {
                 window.location.href = '/api/request-token';
             });
