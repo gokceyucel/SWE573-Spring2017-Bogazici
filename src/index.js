@@ -18,6 +18,9 @@ app.set('views', path.join(__dirname, 'public/views'));
 app.set('view engine', 'ejs');
 app.engine('html', ejs.renderFile);
 
+// set static files directory
+app.use('/static', express.static(path.join(__dirname, 'public')))
+
 app.server = http.createServer(app);
 
 // logger

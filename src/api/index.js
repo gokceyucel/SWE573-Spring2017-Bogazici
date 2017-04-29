@@ -1,7 +1,7 @@
 import { version, keywords } from '../../package.json';
 import { Router } from 'express';
 import tweets from './tweets';
-import config from '../../config.json';
+import config from '../config.json';
 import { OAuth } from 'oauth';
 
 const REQUEST_TOKEN_URL = 'https://api.twitter.com/oauth/request_token';
@@ -52,7 +52,7 @@ export default ({ config, db }) => {
 				}
 				console.log('Your OAuth Access Token: ', oauth_access_token);
 				console.log('Your OAuth Token Secret: ', oauth_access_token_secret);
-				console.log('Now, save these two values, along with your origional consumer secret and key and use these in your twitter app');
+				console.log('Now, save these two values, along with your original consumer secret and key and use these in your twitter app');
 			});
 
 
