@@ -3,6 +3,12 @@
 <html>
 
 <head>
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+    </style>
     <script src='https://code.jquery.com/jquery-2.1.4.min.js'></script>
     <script>
         $(function () {
@@ -32,15 +38,88 @@
                 }
             } else {
                 // User found display username
-                console.log('user session found:',user);
+                console.log('user session found:', user);
                 $('h1').text('Welcome ' + user.name);
             }
         });
+
+        function logout() {
+            console.log('lgout clicked')
+            sessionStorage.clear();
+            window.location.href = '/app/auth';
+        }
+        var map;
+        var infowindow;
+        var markers = [];
+        var latLong;
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                document.getElementById("geo").innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+        function showPosition(position) {
+            latLong = position.coords.latitude + ',' + position.coords.longitude;
+
+            // document.getElementById("geo").innerHTML = "Latitude: " + position.coords.latitude +
+            //     "<br>Longitude: " + position.coords.longitude;
+
+            initMap(position);
+        }
+        function initMap(position) {
+            // Create a map object and specify the DOM element for display.
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: position.coords.latitude, lng: position.coords.longitude },
+                scrollwheel: false,
+                zoom: 13
+            });
+            infowindow = new google.maps.InfoWindow();
+        }
+        function getTweets() {
+            var query = document.getElementById('query').value;
+            $.get(`/api/tweets/${query}/${latLong}`)
+                .done(function (tweets) {
+
+                    markers.forEach(marker => {
+                        marker.setMap(null);
+                    });
+
+                    tweets.forEach(tweet => {
+                        console.log(tweet);
+                        createMarker(tweet);
+                    })
+                });
+        }
+        function createMarker(tweet) {
+            if (!tweet.geo) return console.log('geo not found');
+
+            var tweetPosition = new google.maps.LatLng(tweet.geo.coordinates[0], tweet.geo.coordinates[1]);
+
+            var marker = new google.maps.Marker({
+                map: map,
+                position: tweetPosition
+            });
+
+            google.maps.event.addListener(marker, 'click', function () {
+                infowindow.setContent(tweet.text);
+                infowindow.open(map, this);
+            });
+
+            markers.push(marker);
+        }
     </script>
 </head>
 
 <body>
     <h1></h1>
+    <button onclick="logout()">Logout</button>
+    <button onclick="getLocation()">Get Location</button>
+    <button onclick="getTweets()">Get Tweets</button>
+    <input id="query" />
+    <div id="geo"></div>
+    <div id="map"></div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOAzNAHUK_RoM5L7H9fqyo9FnKy2zwReI" async defer></script>
 </body>
 
 </html>

@@ -36,6 +36,7 @@ export default ({ config, db }) => {
 			}
 			_oauth_access_token_secret = oauth_token_secret;
 			res.redirect('https://api.twitter.com/oauth/authenticate?oauth_token=' + oauth_token);
+			// res.json({ redirect_url: 'https://api.twitter.com/oauth/authenticate?oauth_token=' + oauth_token })
 		});
 	});
 
