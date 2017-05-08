@@ -16,7 +16,11 @@
             }
 
             $('#sign-in-with-twitter').on('click', function () {
-                window.location.href = '/api/request-token';
+                $.get('/api/request-token')
+                    .done(function (res) {
+                        var redirectUrl = res.redirect_url;
+                        window.location.href = redirectUrl;
+                    });
             });
         });
     </script>

@@ -32,11 +32,12 @@ export default ({ config, db }) => {
 	api.get('/request-token', (req, res) => {
 		oa.getOAuthRequestToken((err, oauth_token, oauth_token_secret, results) => {
 			if (err) {
-				throw new Error(([err.statusCode, err.data].join(': ')));
+				// throw new Error(([err.statusCode, err.data].join(': ')));
+				return console.error([err.statusCode, err.data].join(': '));
 			}
 			_oauth_access_token_secret = oauth_token_secret;
-			res.redirect('https://api.twitter.com/oauth/authenticate?oauth_token=' + oauth_token);
-			// res.json({ redirect_url: 'https://api.twitter.com/oauth/authenticate?oauth_token=' + oauth_token })
+			// res.redirect('https://api.twitter.com/oauth/authenticate?oauth_token=' + oauth_token);
+			res.json({ redirect_url: 'https://api.twitter.com/oauth/authenticate?oauth_token=' + oauth_token })
 		});
 	});
 
@@ -48,18 +49,18 @@ export default ({ config, db }) => {
 			function (err, oauth_access_token, oauth_access_token_secret, results2) {
 				if (err) {
 					if (parseInt(err.statusCode) == 401) {
-						throw new Error('The pin number you have entered is incorrect');
+						console.error('The pin number you have entered is incorrect');
 					}
 				}
-				console.log('Your OAuth Access Token: ', oauth_access_token);
-				console.log('Your OAuth Token Secret: ', oauth_access_token_secret);
-				console.log('Now, save these two values, along with your original consumer secret and key and use these in your twitter app');
+				// console.log('Your OAuth Access Token: ', oauth_access_token);
+				// console.log('Your OAuth Token Secret: ', oauth_access_token_secret);
+				// console.log('Now, save these two values, along with your original consumer secret and key and use these in your twitter app');
 
 				oa.get('https://api.twitter.com/1.1/account/verify_credentials.json', oauth_access_token, oauth_access_token_secret, (err, data, response) => {
 					if (err) throw new Error(err.data);
-					console.log('user data:');
+					// console.log('user data:');
 					var user = JSON.parse(data);
-					console.log(user);
+					// console.log(user);
 
 					// TODO: DO NOT SEND SENSITIVE INFO TO CLIENT SIDE, REMOVE THESE!!!;
 					user.access_token = oauth_access_token;
