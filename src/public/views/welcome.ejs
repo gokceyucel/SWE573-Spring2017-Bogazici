@@ -4,7 +4,19 @@
 
 <head>
     <style>
+        .center {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #loading {
+            display: none;
+        }
+
         #map {
+            margin: 20px 0;
             height: 500px;
             width: 100%;
         }
@@ -42,7 +54,6 @@
                 $('h1').text('Welcome ' + user.name);
             }
         });
-
         function logout() {
             console.log('lgout clicked')
             sessionStorage.clear();
@@ -53,10 +64,12 @@
         var markers = [];
         var latLong;
         function getLocation() {
+            loading(true);
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showPosition);
             } else {
                 document.getElementById("geo").innerHTML = "Geolocation is not supported by this browser.";
+                loading(false);
             }
         }
         function showPosition(position) {
@@ -75,12 +88,14 @@
                 zoom: 13
             });
             infowindow = new google.maps.InfoWindow();
+            loading(false);
         }
         function getTweets() {
+            loading(true);
             var query = document.getElementById('query').value;
             $.get(`/api/tweets/${query}/${latLong}`)
                 .done(function (tweets) {
-
+                    loading(false);
                     markers.forEach(marker => {
                         marker.setMap(null);
                     });
@@ -89,6 +104,10 @@
                         console.log(tweet);
                         createMarker(tweet);
                     })
+                })
+                .error(function (err) {
+                    loading(false);
+                    console.error(err);
                 });
         }
         function createMarker(tweet) {
@@ -108,18 +127,32 @@
 
             markers.push(marker);
         }
+        function loading(isLoading) {
+            if (isLoading) {
+                $('#loading').show();
+            } else {
+                $('#loading').hide();
+            }
+        }
     </script>
 </head>
 
 <body>
-    <h1></h1>
-    <button onclick="logout()">Logout</button>
-    <button onclick="getLocation()">Get Location</button>
-    <button onclick="getTweets()">Get Tweets</button>
-    <input id="query" />
-    <div id="geo"></div>
-    <div id="map"></div>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOAzNAHUK_RoM5L7H9fqyo9FnKy2zwReI" async defer></script>
+    <div class='center'>
+        <h1></h1>
+        <div id='container'>
+            <button onclick="logout()">Logout</button>
+            <button onclick="getLocation()">Get Location</button>
+            <button onclick="getTweets()">Get Tweets</button>
+            <input id="query" />
+            <div id="geo"></div>
+        </div>
+        <div id="map"></div>
+        <div class="center">
+            <img id="loading" src="/static/img/loading.gif" />
+        </div>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOAzNAHUK_RoM5L7H9fqyo9FnKy2zwReI" async defer></script>
+    </div>
 </body>
 
 </html>

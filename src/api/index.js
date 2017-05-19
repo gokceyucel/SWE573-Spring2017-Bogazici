@@ -3,6 +3,7 @@ import { Router } from 'express';
 import tweets from './tweets';
 import config from '../config.json';
 import { OAuth } from 'oauth';
+var app = require('../index');
 
 const REQUEST_TOKEN_URL = 'https://api.twitter.com/oauth/request_token';
 const ACCESS_TOKEN_URL = 'https://api.twitter.com/oauth/access_token';
@@ -11,7 +12,7 @@ const HASH_VERSION = 'HMAC-SHA1';
 
 const consumer_key = config.consumer_key;
 const consumer_secret = config.consumer_secret;
-const callback_url = config.callback_url;
+const callback_url = config.callback;
 
 const oa = new OAuth(REQUEST_TOKEN_URL, ACCESS_TOKEN_URL, consumer_key, consumer_secret, OAUTH_VERSION, callback_url, HASH_VERSION);
 

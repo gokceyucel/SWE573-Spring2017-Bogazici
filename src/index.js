@@ -7,7 +7,7 @@ import initializeDb from './db';
 import middleware from './middleware';
 import api from './api';
 import publicApp from './public';
-import config from './config.json';
+import config from './config';
 import ejs from 'ejs';
 import path from 'path';
 
@@ -32,11 +32,11 @@ app.use(cors({
 }));
 
 app.use(bodyParser.json({
-	limit : config.bodyLimit
+	limit: config.bodyLimit
 }));
 
 // connect to db
-initializeDb( db => {
+initializeDb(db => {
 
 	// internal middleware
 	app.use(middleware({ config, db }));
