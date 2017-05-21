@@ -87,23 +87,24 @@
                 scrollwheel: false,
                 zoom: 13
             });
+            map.addListener('dragend', function (event) {
+                latLong = `${map.center.lat()},${map.center.lng()}`
+                getTweets();
+            });
             infowindow = new google.maps.InfoWindow();
             loading(false);
         }
         function getTweets() {
-            loading(true);
             var query = document.getElementById('query').value;
+            if (!query) {
+                return alert('Please type something meaningful to the input area.');
+            }
+            loading(true);
             $.get(`/api/tweets/${query}/${latLong}`)
                 .done(function (tweets) {
                     loading(false);
-                    markers.forEach(marker => {
-                        marker.setMap(null);
-                    });
-
-                    tweets.forEach(tweet => {
-                        console.log(tweet);
-                        createMarker(tweet);
-                    })
+                    markers.forEach(marker => marker.setMap(null));
+                    tweets.forEach(tweet => createMarker(tweet));
                 })
                 .error(function (err) {
                     loading(false);
