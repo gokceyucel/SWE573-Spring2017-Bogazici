@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import http from 'http';
 import express from 'express';
 import cors from 'cors';
@@ -8,17 +7,12 @@ import initializeDb from './db';
 import middleware from './middleware';
 import api from './api';
 import publicApp from './public';
-import config from './config';
+import config from './config.json';
 import ejs from 'ejs';
 import path from 'path';
-=======
-import app from './server';
-import config from './config.json';
->>>>>>> Test implementations using mocha
 
-const port = process.env.PORT || config.port;
+let app = express();
 
-<<<<<<< HEAD
 // view engine setup
 app.set('views', path.join(__dirname, 'public/views'));
 app.set('view engine', 'ejs');
@@ -38,12 +32,11 @@ app.use(cors({
 }));
 
 app.use(bodyParser.json({
-	limit: config.bodyLimit
+	limit : config.bodyLimit
 }));
 
 // connect to db
-initializeDb(db => {
-
+initializeDb( db => {
 	// internal middleware
 	app.use(middleware({ config, db }));
 
@@ -52,15 +45,6 @@ initializeDb(db => {
 
 	// app router
 	app.use('/app', publicApp({ config, db }));
-
-	const port = process.env.PORT || config.port;
-
-	app.server.listen(port);
-
-	console.log(`Started on port ${port}`);
-=======
-app.server.listen(port, (err) => {
-  if (err) return console.error(err);
-  console.log(`Server listening port ${port}`);
->>>>>>> Test implementations using mocha
 });
+
+export default app;
