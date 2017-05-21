@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import https from 'https';
 
-export default ({ config, db }) => {
+export default ({ config }) => {
 
   let tweets = Router();
 
-  tweets.get('/:q/:latLong', (req, res, next) => {
+  tweets.get('/:q/:latLong', (req, res) => {
     const q = req.params.q;
     const latLong = req.params.latLong;
 
@@ -22,12 +22,8 @@ export default ({ config, db }) => {
     };
 
     https.get(options, (response) => {
-      const statusCode = response.statusCode;
-      const contentType = response.headers['content-type'];
-
-      response.setEncoding('utf8');
-
       let rawData = '';
+      response.setEncoding('utf8');
       response.on('data', (chunk) => rawData += chunk);
       response.on('end', () => {
         try {
@@ -49,9 +45,9 @@ export default ({ config, db }) => {
         }
       });
     }).on('error', (e) => {
-        console.error(`Got error: ${e.message}`);
-        res.json(e);
-      });
+      console.error(`Got error: ${e.message}`);
+      res.json(e);
+    });
   });
 
   return tweets;

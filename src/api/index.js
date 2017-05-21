@@ -1,4 +1,4 @@
-import { version, keywords } from '../../package.json';
+import { version } from '../../package.json';
 import { Router } from 'express';
 import tweets from './tweets';
 import config from '../config.json';
@@ -30,7 +30,7 @@ export default ({ config, db }) => {
 
 	// TODO: move elsewhere
 	api.get('/request-token', (req, res) => {
-		oa.getOAuthRequestToken((err, oauth_token, oauth_token_secret, results) => {
+		oa.getOAuthRequestToken((err, oauth_token, oauth_token_secret) => {
 			if (err) {
 				// throw new Error(([err.statusCode, err.data].join(': ')));
 				return console.error([err.statusCode, err.data].join(': '));
@@ -46,7 +46,7 @@ export default ({ config, db }) => {
 			verifier = req.query.oauth_verifier;
 
 		oa.getOAuthAccessToken(oauth_token, _oauth_access_token_secret, verifier,
-			function (err, oauth_access_token, oauth_access_token_secret, results2) {
+			function (err, oauth_access_token, oauth_access_token_secret) {
 				if (err) {
 					if (parseInt(err.statusCode) == 401) {
 						console.error('The pin number you have entered is incorrect');
@@ -56,7 +56,7 @@ export default ({ config, db }) => {
 				// console.log('Your OAuth Token Secret: ', oauth_access_token_secret);
 				// console.log('Now, save these two values, along with your original consumer secret and key and use these in your twitter app');
 
-				oa.get('https://api.twitter.com/1.1/account/verify_credentials.json', oauth_access_token, oauth_access_token_secret, (err, data, response) => {
+				oa.get('https://api.twitter.com/1.1/account/verify_credentials.json', oauth_access_token, oauth_access_token_secret, (err, data) => {
 					if (err) throw new Error(err.data);
 					// console.log('user data:');
 					var user = JSON.parse(data);
