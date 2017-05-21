@@ -11,7 +11,7 @@ const HASH_VERSION = 'HMAC-SHA1';
 
 const consumer_key = config.consumer_key;
 const consumer_secret = config.consumer_secret;
-const callback_url = config.callback_url_local;
+const callback_url = config.callback_url;
 
 const oa = new OAuth(REQUEST_TOKEN_URL, ACCESS_TOKEN_URL, consumer_key, consumer_secret, OAUTH_VERSION, callback_url, HASH_VERSION);
 
